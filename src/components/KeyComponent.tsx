@@ -5,7 +5,7 @@ export const KeyComponent = ({ letter, width }: { letter: string; width?: number
     if (letter === "") {
 
         return (
-            <div className={"size-10 flex justify-center bg-blue-500  rounded select-none"} style={{width: myWidth}}>-</div>
+            <div className={"size-10 flex justify-center bg-blue-500  text-gray-700 rounded select-none"} style={{width: myWidth}}>-</div>
         )
     }
 

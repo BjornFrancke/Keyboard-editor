@@ -1,26 +1,15 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {KeyComponent} from "./components/KeyComponent.tsx";
 import "./App.css"
-import {initialKeyMatrix} from "./InitialKeyMatrix.tsx";
+import {initialKeyMatrixANSI} from "./InitialKeyMatrixANSI.tsx";
 import {BottomBar} from "./components/BottomBar.tsx";
 import {MenuButtons} from "./components/MenuButtons.tsx";
-
-export interface Key {
-    letter: string;
-    width?: number;
-    height?: number;
-}
-
-export interface KeyArr {
-    keys: Key[];
-}
-
-export type KeyMatrix = KeyArr[];
+import {Key, KeyMatrix} from "./types.ts";
 
 
 function App() {
 
-    const [keyMatrix, setKeyMatrix] = useState<KeyMatrix>(initialKeyMatrix);
+    const [keyMatrix, setKeyMatrix] = useState<KeyMatrix>(initialKeyMatrixANSI);
     const [selectedKey, setSelectedKey] = useState<{ row: number, col: number }>({
         row: 0,
         col: 0,
@@ -86,16 +75,15 @@ function App() {
             });
             return text;
         }
-        function displayKeyMatrixAsJSON() {
-            const matrixJSON = JSON.stringify(keyMatrix, null, 2);
-            return matrixJSON;
-        }
-    */
+        */
+    function displayKeyMatrixAsJSON() {
+        return JSON.stringify(keyMatrix, null, 2);
+    }
 
-    useEffect(() => {
-        console.log(newSize)
-    }, [newSize]);
-
+    const handleCopyToClipboard = () => {
+        const jsonData = displayKeyMatrixAsJSON()
+        navigator.clipboard.writeText(jsonData)
+    }
 
     const deleteKey = (rowIndex: number, keyIndex: number) => {
         const updatedMatrix = keyMatrix.map((row, index) => {
@@ -118,7 +106,8 @@ function App() {
     return (
         <div>
             <div className={"w-full h-full"}>
-                <div className={"h-fit w-[800px] my-5 bg-blue-500 mx-auto  p-3 flex flex-col space-y-1 rounded"}>
+                <div
+                    className={"h-fit w-fit min-w-8 my-5 bg-blue-500 border border-blue-300 shadow-xl mx-auto  p-3 flex flex-col space-y-1 rounded"}>
                     {keyMatrix.map((row, rowIndex) => (
                         <>
                             {row.keys.length > 0 && (
@@ -147,7 +136,7 @@ function App() {
                         </>
                     ))}
                 </div>
-                <div className={"mx-auto size-52 bg-green-500 rounded"}>
+                <div className={"mx-auto w-52 h-fit bg-green-500 rounded"}>
 
                     <div className={"bg-blue-500 size-auto p-2 space-y-2 rounded-t"}>
                         <input className={"w-full px-2 py-1 rounded"} type={"text"} value={newLetter}
@@ -166,8 +155,11 @@ function App() {
                         </div>
                     </div>
                     <MenuButtons onSave={() => saveKeyMatrixToLocalStorage()}
-                                 onRestore={() => restoreKeyMatrixFromLocalStorage()} onNewRow={() => addKeyToNewRow({letter: " "})}/>
-                </div>;
+                                 onRestore={() => restoreKeyMatrixFromLocalStorage()}
+                                 onNewRow={() => addKeyToNewRow({letter: " "})}
+                                 onCopyToClipboard={() => handleCopyToClipboard()}/>
+                </div>
+                ;
             </div>
             <BottomBar selectedKey={selectedKey}/>
         </div>
