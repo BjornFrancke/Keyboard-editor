@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    @apply overflow-y-hidden  max-h-screen bg-gray-100
+}
