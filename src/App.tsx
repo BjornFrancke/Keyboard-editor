@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {KeyComponent} from "./components/KeyComponent.tsx";
 import "./App.css"
-import {initialKeyMatrixANSI} from "./InitialKeyMatrixANSI.tsx";
+import {initialKeyMatrixANSI} from "./utils/InitialKeyMatrixANSI.tsx";
 import {BottomBar} from "./components/BottomBar.tsx";
 import {MenuButtons} from "./components/MenuButtons.tsx";
 import {Key, KeyMatrix} from "./types.ts";
@@ -136,24 +136,25 @@ function App() {
                         </>
                     ))}
                 </div>
-                <div className={"mx-auto w-52 h-fit bg-green-500 rounded"}>
+                <div className={"mx-auto w-52 h-fit bg-blue-500 rounded space-y-2"}>
 
                     <div className={"bg-blue-500 size-auto p-2 space-y-2 rounded-t"}>
-                        <input className={"w-full px-2 py-1 rounded"} type={"text"} value={newLetter}
+                        <input className={"myInput"} type={"text"} value={newLetter}
                                onChange={(e) => setNewLetter(e.target.value)}/>
-                        <input className={"w-full px-2 py-1 rounded"} type={"number"} min={0} max={3} step={0.25}
+                        <input className={"myInput"} type={"number"} min={0} max={3} step={0.25}
                                value={newSize}
                                onChange={(e) => setNewSize(e.target.valueAsNumber)}/>
                         <div className={"flex space-x-2"}>
                             <button
                                 onClick={() => handleEditKey(selectedKey.row, selectedKey.col, newLetter, newSize)}
-                                className={"bg-white py-1 px-2 rounded"}>Save
+                                className={"bg-white py-1 px-2 rounded text-black text-opacity-80"}>Save
                             </button>
-                            <button className={"bg-red-500 py-1 px-2 rounded"}
+                            <button className={"bg-red-500 py-1 px-2 rounded text-black text-opacity-80"}
                                     onClick={() => deleteKey(selectedKey.row, selectedKey.col)}>Delete
                             </button>
                         </div>
                     </div>
+                    <div className={"h-[2px] w-[12rem] rounded mx-auto bg-white"}></div>
                     <MenuButtons onSave={() => saveKeyMatrixToLocalStorage()}
                                  onRestore={() => restoreKeyMatrixFromLocalStorage()}
                                  onNewRow={() => addKeyToNewRow({letter: " "})}

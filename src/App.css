@@ -6,3 +6,12 @@
 :root {
     @apply overflow-y-hidden  max-h-screen bg-gray-100
 }
+.myInput {
+    @apply w-full px-2 py-1 rounded
+}
+
+
+.menuButton {
+    @apply bg-white rounded px-2 py-1 border border-white hover:bg-gray-400
+}
+

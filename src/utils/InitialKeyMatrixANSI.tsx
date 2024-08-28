@@ -1,4 +1,4 @@
-import { KeyMatrix } from "./types.ts";
+import { KeyMatrix } from "../types.ts";
 
 export const initialKeyMatrixANSI: KeyMatrix = [
     {

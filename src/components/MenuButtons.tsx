@@ -1,3 +1,5 @@
+import "../App.css"
+
 export function MenuButtons({onNewRow, onRestore, onSave, onCopyToClipboard}: {
     onSave: () => void,
     onRestore: () => void,
@@ -6,14 +8,13 @@ export function MenuButtons({onNewRow, onRestore, onSave, onCopyToClipboard}: {
 }) {
 
 
-
-    return <div className={"flex flex-col"}>
-        <button className={"bg-white rounded px-2 py-1 m-1 border border-white hover:bg-gray-400"} onClick={onSave}>Save</button>
-        <button className={"bg-white rounded px-2 py-1 m-1 border border-white hover:bg-gray-400"} onClick={onRestore}>Restore</button>
+    return <div className={"flex flex-col p-2 space-y-2 shadow-lg"}>
+        <button className={"menuButton"} onClick={onSave}>Save</button>
+        <button className={"menuButton"} onClick={onRestore}>Restore</button>
         <button
-            className={"bg-white rounded px-2 py-1 m-1 border border-white hover:bg-gray-400"} onClick={onNewRow}
+            className={"menuButton"} onClick={onNewRow}
         > new row
         </button>
-        <button className={"bg-white rounded px-2 py-1 m-1 border border-white hover:bg-gray-400"} onClick={onCopyToClipboard}>Copy to clipboard</button>
+        <button className={"menuButton"} onClick={onCopyToClipboard}>Copy to clipboard</button>
     </div>;
 }
