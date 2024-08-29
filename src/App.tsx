@@ -1,60 +1,31 @@
 import {useState} from "react";
-import "./App.css"
+import "./App.css";
 import {initialKeyMatrixANSI} from "./utils/InitialKeyMatrixANSI.tsx";
-import {BottomBar} from "./components/BottomBar.tsx";
-import {Key, KeyMatrix} from "./types.ts";
-import {MenuButtons} from "./components/MenuButtons.tsx";
-import {KeyMatrixComponent} from "./components/KeyMatrixComponent.tsx";
-import {ControlPanel} from "./components/ControlPanel.tsx";
-
+import {KeyMatrix} from "./types.ts";
+import {BottomBar, ControlPanel, KeyMatrixComponent, MenuButtons} from "./components";
+import {addKeyToNewRow, addKeyToRow, deleteKeyFromMatrix, editKeyInMatrix} from "./utils/utils.ts";
 
 function App() {
-
     const [keyMatrix, setKeyMatrix] = useState<KeyMatrix>(initialKeyMatrixANSI);
-    const [selectedKey, setSelectedKey] = useState<{ row: number, col: number }>({
-        row: 0,
-        col: 0,
-    });
+    const [selectedKey, setSelectedKey] = useState<{ row: number, col: number }>({row: 0, col: 0});
     const [newLetter, setNewLetter] = useState<string>("Select a key");
     const [newSize, setNewSize] = useState<number>(1);
-    const [styleData, setStyleData] = useState<{
-        fontSize?: number;
-        bold?: boolean;
-    }>({fontSize: 16,});
+    const [styleData, setStyleData] = useState<{ fontSize?: number; bold?: boolean }>({fontSize: 16});
 
     const handleEditKey = () => {
-        const updatedMatrix = keyMatrix.map((row, rIndex) => {
-            if (rIndex === selectedKey.row) {
-                return {
-                    keys: row.keys.map((key, kIndex) => {
-                        if (kIndex === selectedKey.col) {
-                            return {letter: newLetter, width: newSize};
-                        }
-                        return key;
-                    }),
-                };
-            }
-            return row;
-        });
-        setKeyMatrix(updatedMatrix);
+        setKeyMatrix(prevMatrix => editKeyInMatrix(prevMatrix, selectedKey.row, selectedKey.col, newLetter, newSize));
     };
 
-
-    const addKeyToNewRow = (newKey: Key) => {
-        const updatedMatrix = [...keyMatrix, {keys: [newKey]}];
-        setKeyMatrix(updatedMatrix);
+    const handleDeleteKey = () => {
+        setKeyMatrix(prevMatrix => deleteKeyFromMatrix(prevMatrix, selectedKey.row, selectedKey.col));
     };
 
     const handleAddKey = (rowIndex: number, newLetter: string) => {
-        const updatedMatrix = keyMatrix.map((row, rIndex) => {
-            if (rIndex === rowIndex) {
-                return {
-                    keys: [...row.keys, {letter: newLetter}]
-                };
-            }
-            return row;
-        });
-        setKeyMatrix(updatedMatrix);
+        setKeyMatrix(prevMatrix => addKeyToRow(prevMatrix, rowIndex, newLetter));
+    };
+
+    const handleAddKeyToNewRow = () => {
+        setKeyMatrix(prevMatrix => addKeyToNewRow(prevMatrix, {letter: " "}));
     };
 
     const saveKeyMatrixToLocalStorage = () => {
@@ -67,41 +38,32 @@ function App() {
             setKeyMatrix(JSON.parse(savedKeyMatrix));
         }
     };
-    
-    function displayKeyMatrixAsJSON() {
+
+    const displayKeyMatrixAsJSON = () => {
         return JSON.stringify(keyMatrix, null, 2);
-    }
+    };
 
     const handleCopyToClipboard = () => {
-        const jsonData = displayKeyMatrixAsJSON()
-        navigator.clipboard.writeText(jsonData)
-    }
-
-    const deleteKey = (rowIndex: number, keyIndex: number) => {
-        const updatedMatrix = keyMatrix.map((row, index) => {
-            if (index === rowIndex) {
-                const lastKeyIndex = keyIndex
-                if (lastKeyIndex >= 0) {
-                    row.keys.splice(lastKeyIndex, 1);
-                }
-            }
-            return {keys: row.keys};
-        });
-        setKeyMatrix(updatedMatrix);
+        navigator.clipboard.writeText(displayKeyMatrixAsJSON());
     };
 
     const handleKeyClick = (rowIndex: number, keyIndex: number) => {
+        const key = keyMatrix[rowIndex].keys[keyIndex];
         setSelectedKey({row: rowIndex, col: keyIndex});
-        setNewLetter(keyMatrix[rowIndex].keys[keyIndex].letter);
-        setNewSize(keyMatrix[rowIndex].keys[keyIndex].width || 0);
-    }
+        setNewLetter(key.letter);
+        setNewSize(key.width || 0);
+    };
+
     return (
         <div>
-            <div className={"w-full h-full"}>
-                <KeyMatrixComponent keyMatrix={keyMatrix} styleData={styleData} handleKeyClick={handleKeyClick}
-                                    handleAddKey={handleAddKey}/>
+            <div className="w-full h-full">
+                <KeyMatrixComponent
+                    keyMatrix={keyMatrix}
+                    styleData={styleData}
+                    handleKeyClick={handleKeyClick}
+                    handleAddKey={handleAddKey}
+                />
                 <div className="mx-auto w-52 h-fit bg-blue-500 rounded space-y-2">
-
                     <ControlPanel
                         newLetter={newLetter}
                         setNewLetter={setNewLetter}
@@ -109,18 +71,17 @@ function App() {
                         setNewSize={setNewSize}
                         styleData={styleData}
                         setStyleData={setStyleData}
-                        handleEditKey={() => handleEditKey()}
-                        deleteKey={() => deleteKey(selectedKey.row, selectedKey.col)}
+                        handleEditKey={handleEditKey}
+                        deleteKey={handleDeleteKey}
                     />
                     <MenuButtons
                         onSave={saveKeyMatrixToLocalStorage}
                         onRestore={restoreKeyMatrixFromLocalStorage}
-                        onNewRow={() => addKeyToNewRow({letter: " "})}
+                        onNewRow={handleAddKeyToNewRow}
                         onCopyToClipboard={handleCopyToClipboard}
                     />
                 </div>
             </div>
-
             <BottomBar selectedKey={selectedKey}/>
         </div>
     );
