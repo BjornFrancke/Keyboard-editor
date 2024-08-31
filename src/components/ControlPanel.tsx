@@ -21,12 +21,23 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                                                           }) => {
     return (
         <>
-            <div>
-                <input
-                    onChange={(e) => setStyleData({...styleData, fontSize: e.target.valueAsNumber})}
-                    type="number"
-                    value={styleData.fontSize}
-                />
+            <div className={"p-2"}>
+                <div>
+                    <p>Font Size</p>
+                    <input
+                        onChange={(e) => setStyleData({...styleData, fontSize: e.target.valueAsNumber})}
+                        type="number"
+                        className={"myInput"}
+                        min={8}
+                        step={1}
+                        value={styleData.fontSize}
+                    />
+                </div>
+                <div>
+                    <p>Bold</p>
+                    <input type={"radio"} checked={styleData.bold}
+                           onClick={() => setStyleData({...styleData, bold: !styleData.bold})}/>
+                </div>
             </div>
             <div className="bg-blue-500 size-auto p-2 space-y-2 rounded-t">
                 <input
