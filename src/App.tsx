@@ -79,7 +79,7 @@ function App() {
 
     return (
         <div>
-            <div className="w-full h-full" onKeyDown={handleKeyPress} tabIndex={0}>
+            <div className="w-full h-full focus:outline-none" onKeyDown={handleKeyPress} tabIndex={0}>
                 <KeyMatrixComponent
                     keyMatrix={keyMatrix}
                     styleData={styleData}
