@@ -3,7 +3,15 @@ import "./App.css";
 import {initialKeyMatrixANSI} from "./utils/InitialKeyMatrixANSI.tsx";
 import {KeyMatrix} from "./types.ts";
 import {BottomBar, ControlPanel, KeyMatrixComponent, MenuButtons} from "./components";
-import {addKeyToNewRow, addKeyToRow, deleteKeyFromMatrix, editKeyInMatrix} from "./utils/utils.ts";
+import {
+    addKeyToNewRow,
+    addKeyToRow,
+    calculateNewPosition,
+    deleteKeyFromMatrix,
+    editKeyInMatrix,
+    moveKeyInCol,
+    moveKeyInRow
+} from "./utils/utils.ts";
 
 function App() {
     const [keyMatrix, setKeyMatrix] = useState<KeyMatrix>(initialKeyMatrixANSI);
@@ -14,6 +22,21 @@ function App() {
 
     const handleEditKey = () => {
         setKeyMatrix(prevMatrix => editKeyInMatrix(prevMatrix, selectedKey.row, selectedKey.col, newLetter, newSize));
+    };
+
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const {row, col} = selectedKey;
+        const currentLocation = keyMatrix[row].keys[col].location || {x: 0, y: 0};
+
+        const newPosition = calculateNewPosition(currentLocation, e.key);
+        if (newPosition) {
+            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                setKeyMatrix(prevMatrix => moveKeyInRow(prevMatrix, row, col, newPosition.y));
+            } else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+                setKeyMatrix(prevMatrix => moveKeyInCol(prevMatrix, row, col, newPosition.x));
+            }
+        }
     };
 
     const handleDeleteKey = () => {
@@ -56,7 +79,7 @@ function App() {
 
     return (
         <div>
-            <div className="w-full h-full">
+            <div className="w-full h-full" onKeyDown={handleKeyPress} tabIndex={0}>
                 <KeyMatrixComponent
                     keyMatrix={keyMatrix}
                     styleData={styleData}

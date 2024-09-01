@@ -17,7 +17,7 @@ export const KeyRow: React.FC<KeyRowProps> = ({row, rowIndex, styleData, handleK
                 {row.keys.map((key, keyIndex) => (
                     <div key={keyIndex} onClick={() => handleKeyClick(rowIndex, keyIndex)}>
                         <KeyboardStyle styleData={styleData}>
-                            <KeyComponent key={keyIndex} letter={key.letter} width={key.width}/>
+                            <KeyComponent key={keyIndex} letter={key.letter} width={key.width} location={key.location}/>
                         </KeyboardStyle>
                     </div>
                 ))}
