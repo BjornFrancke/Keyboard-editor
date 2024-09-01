@@ -85,6 +85,7 @@ function App() {
                     styleData={styleData}
                     handleKeyClick={handleKeyClick}
                     handleAddKey={handleAddKey}
+                    selectedKey={selectedKey}
                 />
                 <div className="mx-auto w-52 h-fit bg-blue-500 rounded space-y-2">
                     <ControlPanel

@@ -1,12 +1,14 @@
-export const KeyComponent = ({letter, width, location}: {
+export const KeyComponent = ({letter, width, location, isSelected}: {
     letter: string;
     width?: number,
-    location?: { y?: number, x?: number }
+    location?: { y?: number, x?: number },
+    isSelected?: boolean,
 }) => {
 
     const styles = {
         transform: `translate(${location?.x || 0}px, ${location?.y || 0}px)`,
-        width: width ? `${width * 2.5}rem` : "2.5rem"
+        width: width ? `${width * 2.5}rem` : "2.5rem",
+        borderColor: isSelected ? "#ef4444" : "rgb(107,114,128)",
     }
 
     if (letter === "") {
