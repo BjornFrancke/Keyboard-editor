@@ -41,10 +41,14 @@ function App() {
 
     const handleDeleteKey = () => {
         setKeyMatrix(prevMatrix => deleteKeyFromMatrix(prevMatrix, selectedKey.row, selectedKey.col));
+        setSelectedKey({row: 0, col: 0});
+        setNewLetter("Select a key");
     };
 
     const handleAddKey = (rowIndex: number, newLetter: string) => {
+        if (newLetter != "Select a key") {
         setKeyMatrix(prevMatrix => addKeyToRow(prevMatrix, rowIndex, newLetter));
+        }
     };
 
     const handleAddKeyToNewRow = () => {
