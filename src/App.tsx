@@ -10,7 +10,8 @@ import {
     deleteKeyFromMatrix,
     editKeyInMatrix,
     moveKeyInCol,
-    moveKeyInRow
+    moveKeyInRow,
+    swapKeyInRow
 } from "./utils/utils.ts";
 
 function App() {
@@ -28,7 +29,6 @@ function App() {
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const {row, col} = selectedKey;
         const currentLocation = keyMatrix[row].keys[col].location || {x: 0, y: 0};
-
         const newPosition = calculateNewPosition(currentLocation, e.key);
         if (newPosition) {
             if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -37,7 +37,17 @@ function App() {
                 setKeyMatrix(prevMatrix => moveKeyInCol(prevMatrix, row, col, newPosition.x));
             }
         }
+        if (e.key === "a") {
+            setKeyMatrix(prevMatrix => swapKeyInRow(prevMatrix, selectedKey.row, selectedKey.col, "left"));
+            setSelectedKey({...selectedKey, col: (selectedKey.col - 1)})
+        }
+        if (e.key === "d") {
+            setKeyMatrix(prevMatrix => swapKeyInRow(prevMatrix, selectedKey.row, selectedKey.col, "right"));
+            setSelectedKey({...selectedKey, col: (selectedKey.col + 1)})
+        }
+
     };
+
 
     const handleDeleteKey = () => {
         setKeyMatrix(prevMatrix => deleteKeyFromMatrix(prevMatrix, selectedKey.row, selectedKey.col));
@@ -47,7 +57,7 @@ function App() {
 
     const handleAddKey = (rowIndex: number, newLetter: string) => {
         if (newLetter != "Select a key") {
-        setKeyMatrix(prevMatrix => addKeyToRow(prevMatrix, rowIndex, newLetter));
+            setKeyMatrix(prevMatrix => addKeyToRow(prevMatrix, rowIndex, newLetter));
         }
     };
 

@@ -50,6 +50,29 @@ export const moveKeyInRow = (matrix: KeyMatrix, row: number, col: number, y: num
     ))
 }
 
+export function swapKeyInRow(keyMatrix: KeyMatrix, row: number, col: number, direction: "left" | "right"
+): KeyMatrix {
+    if ((direction === "left" && col === 0) || (direction === "right" && col === keyMatrix[row].keys.length - 1)) {
+        return keyMatrix;
+    }
+    const newMatrix = [...keyMatrix];
+    const currentRow = newMatrix[row];
+    const keys = [...currentRow.keys];
+
+    if (direction === "left") {
+        const temp = keys[col - 1];
+        keys[col - 1] = keys[col];
+        keys[col] = temp;
+    } else if (direction === "right") {
+        const temp = keys[col + 1];
+        keys[col + 1] = keys[col];
+        keys[col] = temp;
+    }
+
+    newMatrix[row] = {...currentRow, keys};
+
+    return newMatrix;
+}
 
 export const deleteKeyFromMatrix = (matrix: KeyMatrix, row: number, col: number): KeyMatrix => {
     return matrix.map((rowData, rIndex) => (
